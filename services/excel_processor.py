@@ -12,6 +12,12 @@ class ExcelProcessor:
     async def process_upload(self, file, db):
         try:
             logger.debug("Start processing file: %s", file.filename)
+            
+            supported_extensions = ('.xls')
+            if not file.filename.lower().endswith(supported_extensions):
+                logger.error("Unsupported file format: %s", file.filename)
+                raise HTTPException(status_code=400, detail="Unsupported file format. Please upload an Excel file (.xls)")
+            
             contents = await file.read()
             logger.debug("File read successfully, size: %d byte", len(contents))
             
